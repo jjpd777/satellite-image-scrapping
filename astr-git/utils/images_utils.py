@@ -51,8 +51,8 @@ def create_tiles(coordinates,number_of_samples=20):
 
 BASE_URL ='''https://services.sentinel-hub.com/ogc/wms/b7b5e3ef-5a40-4e2a-9fd3-75ca2b81cb32?SERVICE=WMS&amp&REQUEST=GetMap&amp&MAXCC=20&amp&LAYERS=1-NATURAL-COLOR&amp&EVALSOURCE=S2&amp&WIDTH=1281&amp&HEIGHT=989&amp&FORMAT=image/jpeg&amp&NICENAME=Sentinel-2+image+on+2019-04-29.jpg&amp&TIME=2018-10-01/2019-04-29&amp&BBOX='''
 
-def fetch_images(coordinates,output_dir):
-    boxes = create_tiles(coordinates,100)
+def fetch_images(coordinates,output_dir,sample_size=100):
+    boxes = create_tiles(coordinates,sample_size)
     for box in boxes:
         url = BASE_URL + box
         r = requests.get(url)

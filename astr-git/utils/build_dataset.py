@@ -19,7 +19,7 @@ colorado_coord = [-11769378,4792324,-11763353,4797049]
 
 STATES_COORDINATES = [nev_coord,cali_coord,northdk_coord]
 
-# fetch_accross_states(STATES_COORDINATES,MINES_RAW)
+# fetch_accross_states(STATES_COORDINATES,NOTMINES_RAW)
 crop_images(MINES_RAW,MINES_CLEAN)
 crop_images(NOTMINES_RAW,NOTMINES_CLEAN)
 

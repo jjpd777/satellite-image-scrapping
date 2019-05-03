@@ -3,6 +3,9 @@ import cv2
 from utils.utils_hdf5 import load_dataset, store_h5
 import imgaug.augmenters as iaa
 import numpy as np
+import random
+random.seed(777)
+
 
 
 def reshape(img):
