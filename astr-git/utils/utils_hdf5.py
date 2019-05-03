@@ -17,18 +17,17 @@ def load_dataset(data):
     mines = f[MINES_CASES]
     notmines = f[NOTMINES_CASES]
 
-    images = []
-    images1 = []
+    mines_images = []
+    notmines_images = []
     for i in mines.keys():
         img = np.array(mines[i])
-        images.append(img)
+        mines_images.append(img)
     for i in notmines.keys():
         img = np.array(notmines[i])
-        images1.append(img)
-    print(len(images))
-    print(len(images1))
+        notmines_images.append(img)
 
-    return images
+
+    return (mines_images, notmines_images)
 
 
 ### GET ALL images
@@ -55,5 +54,19 @@ def create_dataset(mines_dir,notmines_dir,h5_name):
         mine_name = str(image).split('/')[-1]
         notmines_group.create_dataset(mine_name, data= vector_img, dtype='uint8')
 
+def store_h5(mines, notmines,h5_name):
+        f = h5.File(h5_name,'a')
+        mines_group = f.create_group(MINES_CASES)
+        rand = 0
+        for image in mines:
+            mine_name = str(rand) + "-" +str(image)
+            mines_group.create_dataset(mine_name, data= image, dtype='uint8')
+            rand +=1
+        notmines_group = f.create_group(NOTMINES_CASES)
+
+        for image in notmines:
+            mine_name = str(rand) + "-" +str(image)
+            notmines_group.create_dataset(mine_name, data= image, dtype='uint8')
+            rand+=1
 
 # check = load_dataset()
