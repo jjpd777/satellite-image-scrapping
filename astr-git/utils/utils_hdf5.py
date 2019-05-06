@@ -4,69 +4,51 @@ import numpy as np
 from pathlib import Path
 from PIL import Image
 
-MINES_CASES = 'mines'
-NOTMINES_CASES = 'not_mines'
 
-def load_dataset(data):
+def keys(f):
+    return [key for key in f.keys()]
+
+def load_dataset(h5_name):
     ''' Load in images from Hdf5 file as np.arrays.
-    Dimensions of the images are (640, 1360, 3)
     '''
+    f = h5.File(h5_name,'r')
+    h5_keys = keys(f)
+    return_list = []
+    test_titles = []
+    for key in h5_keys:
+        extracted_group = f[key]
+        extract_images = []
+        for i in extracted_group.keys():
+            if(key == 'test_cases'):
+                test_titles.append(i)
 
+            img = np.array(extracted_group[i])
+            extract_images.append(img)
 
-    f = h5.File(data,'r')
-    mines = f[MINES_CASES]
-    notmines = f[NOTMINES_CASES]
+        return_list.append(extract_images)
+    return_list.append(test_titles)
 
-    mines_images = []
-    notmines_images = []
-    for i in mines.keys():
-        img = np.array(mines[i])
-        mines_images.append(img)
-    for i in notmines.keys():
-        img = np.array(notmines[i])
-        notmines_images.append(img)
+    return return_list
 
+def create_dataset(keys_input,values_path, h5_name):
+    '''Create an Hdf5 file from a dictionary of images'''
+    key_path_pairs = {}
+    for i in range(len(keys_input)):
+        key_path_pairs[keys_input[i]] = values_path[i]
 
-    return (mines_images, notmines_images)
+    for key, value in key_path_pairs.items():
+        h5_key = key
+        path = Path(value)
 
-
-### GET ALL images
-def create_dataset(mines_dir,notmines_dir,h5_name):
-    '''Create an Hdf5 file from a directory of images'''
-    mines_path = Path(mines_dir)
-    notmines_path = Path(notmines_dir)
-
-    mines_images = mines_path.glob('*.jpg')
-    notmines_images = notmines_path.glob('*.jpg')
-
-    f = h5.File(h5_name,'a')
-    mines_group = f.create_group(MINES_CASES)
-
-    for image in mines_images:
-        vector_img = cv2.imread(str(image))
-        mine_name = str(image).split('/')[-1]
-        mines_group.create_dataset(mine_name, data= vector_img, dtype='uint8')
-
-    notmines_group = f.create_group(NOTMINES_CASES)
-
-    for image in notmines_images:
-        vector_img = cv2.imread(str(image))
-        mine_name = str(image).split('/')[-1]
-        notmines_group.create_dataset(mine_name, data= vector_img, dtype='uint8')
-
-def store_h5(mines, notmines,h5_name):
+        images = path.glob('*.jpg')
         f = h5.File(h5_name,'a')
-        mines_group = f.create_group(MINES_CASES)
-        rand = 0
-        for image in mines:
-            mine_name = str(rand) + "-" +str(image)
-            mines_group.create_dataset(mine_name, data= image, dtype='uint8')
-            rand +=1
-        notmines_group = f.create_group(NOTMINES_CASES)
 
-        for image in notmines:
-            mine_name = str(rand) + "-" +str(image)
-            notmines_group.create_dataset(mine_name, data= image, dtype='uint8')
-            rand+=1
+        mines_group = f.create_group(h5_key)
+
+        for image in images:
+            vector_img = cv2.imread(str(image))
+            name = str(image).split('/')[-1]
+            mines_group.create_dataset(name, data= vector_img, dtype='uint8')
+
 
 # check = load_dataset()
