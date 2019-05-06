@@ -41,7 +41,4 @@ PATHS = [MINES_CLEAN, NOTMINES_CLEAN, TEST_DATA_CLEAN]
 
 
 create_dataset(KEYS,PATHS,H5_FILENAME)
-# X,Y,T,_ = load_dataset(H5_FILENAME)
-# print(len(T))
-# print(len(X))
-# print(len(Y))
+# load_dataset(H5_FILENAME)
